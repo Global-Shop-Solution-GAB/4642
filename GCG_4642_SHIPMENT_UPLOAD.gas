@@ -1,0 +1,38 @@
+Program.Sub.ScreenSU.Start
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Variable.Global.sParams.Declare(String)
+Variable.Global.sFile.Declare(String)
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+V.Local.sRet.Declare(String)
+V.Local.sType.Declare(String)
+V.Local.sCarrier.Declare(String)
+V.Local.bExists.Declare(Boolean)
+
+F.Intrinsic.String.Concat(V.Caller.FilesDir,"\",V.Caller.Terminal,"SHIPFILE.TXT",V.Global.sFile)
+
+F.Intrinsic.File.Exists(V.Global.sFile,V.Local.bExists)
+F.Intrinsic.control.If(V.Local.bExists,=,True)
+	F.Intrinsic.String.Lpad(V.Local.sType," ",3,V.Local.sType)
+	F.Intrinsic.String.RPad(V.Local.sCarrier," ",6,V.Local.sCarrier)
+	'F.Intrinsic.String.Concat(V.Ambient.QuadQuote,V.Caller.CompanyCode,V.Caller.Terminal,"SHIPFILE",V.Local.sCarrier,V.local.sType,V.Ambient.QuadQuote,V.Local.sRet)
+	F.Intrinsic.String.Concat(V.Caller.CompanyCode,V.Caller.Terminal,"SHIPFILE",V.Local.sCarrier,V.local.sType,V.Local.sRet)
+	F.Intrinsic.Task.LaunchGSSsync("ORD98HOD","-c",V.Local.sRet)
+	F.Intrinsic.UI.Msgbox("Shipment(s) Successfully Uploaded")
+	F.Intrinsic.Control.End
+
+F.Intrinsic.Control.Else
+	F.Intrinsic.UI.Msgbox("No File Exists to Upload")
+	F.Intrinsic.Control.End
+
+F.Intrinsic.Control.EndIf
+
+Program.Sub.Main.End
+
+Program.Sub.Comments.Start
+${$0$}$GCG_SHIPMENT_UPLOAD$}$BLEFLER$}$03/04/14$}$False
+Program.Sub.Comments.End
+
